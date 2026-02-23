@@ -24,6 +24,53 @@ Context → Spec & Plan → Implement
 | `/conductor:revert [scope]` | 智能回滚 |
 | `/conductor:review` | 代码审查 |
 
+## 安装到 CodeBuddy
+
+### 方式一：使用安装脚本（推荐）
+
+在项目根目录执行：
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/nevernet/opencode-conductor/main/install-codebuddy.sh | bash
+```
+
+这会创建 `.codebuddy/commands/` 目录并复制所有命令文件。
+
+### 方式二：手动安装
+
+1. 克隆仓库到本地
+
+```bash
+git clone https://github.com/nevernet/opencode-conductor.git /tmp/opencode-conductor
+```
+
+2. 复制命令文件到项目
+
+```bash
+mkdir -p .codebuddy/commands
+cp /tmp/opencode-conductor/.codebuddy/commands/*.md .codebuddy/commands/
+```
+
+### 方式三：Git Submodule
+
+```bash
+# 添加 submodule
+git submodule add https://github.com/nevernet/opencode-conductor.git .codebuddy/skills/conductor
+
+# 创建符号链接
+ln -s .codebuddy/skills/conductor/.codebuddy/commands/*.md .codebuddy/commands/
+```
+
+### 安装后使用
+
+安装完成后，在 CodeBuddy 中即可使用所有 `/conductor:` 命令：
+
+```
+/conductor:setup              # 初始化项目
+/conductor:newTrack "xxx"     # 创建新功能
+/conductor:implement          # 开始实现
+```
+
 ## 使用方法
 
 ### 1. 安装 Skill
