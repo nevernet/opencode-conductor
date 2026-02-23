@@ -96,6 +96,14 @@ Ask user to define:
 - Code review process
 - Testing requirements
 
+**Step 5: Code Styles**
+Ask user to define:
+- Linting rules and tools
+- Code formatting (Prettier, gofmt, etc.)
+- Naming conventions per language
+- Language-specific best practices
+- Anti-patterns to avoid
+
 ### 1.3 Generate Files
 
 Create `.conductor/` directory with:
@@ -105,6 +113,7 @@ Create `.conductor/` directory with:
 ├── product-guidelines.md
 ├── tech-stack.md
 ├── workflow.md
+├── code-styles.md
 └── tracks.md
 ```
 
@@ -118,6 +127,7 @@ Files created:
   - .conductor/product-guidelines.md
   - .conductor/tech-stack.md
   - .conductor/workflow.md
+  - .conductor/code-styles.md
   - .conductor/tracks.md
 
 Next steps:
@@ -491,6 +501,7 @@ See `conductor/templates/` directory for template files:
 - `product.md` - Product context template
 - `tech-stack.md` - Tech stack template
 - `workflow.md` - Workflow template
+- `code-styles.md` - Code styles template
 - `tracks.md` - Tracks index template
 - `spec.md` - Feature spec template
 - `plan.md` - Implementation plan template
