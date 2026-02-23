@@ -18,6 +18,7 @@ Context → Spec & Plan → Implement
 |------|------|
 | `/conductor:setup` | 初始化项目上下文 |
 | `/conductor:newTrack [描述]` | 创建新功能/bug track |
+| `/conductor:review-plan` | 审核 SPEC 和 PLAN（实施前必做） |
 | `/conductor:implement` | 执行当前 track 的任务 |
 | `/conductor:status` | 查看进度 |
 | `/conductor:revert [scope]` | 智能回滚 |
@@ -82,6 +83,7 @@ cp -r /tmp/opencode-conductor/templates .opencode/skills/conductor/
 - `.conductor/product-guidelines.md` - 产品指南
 - `.conductor/tech-stack.md` - 技术栈
 - `.conductor/workflow.md` - 工作流定义
+- `.conductor/code-styles.md` - 代码规范
 - `.conductor/tracks.md` - Track 索引
 
 ### 3. 创建新功能 Track
@@ -95,7 +97,22 @@ cp -r /tmp/opencode-conductor/templates .opencode/skills/conductor/
 - `.conductor/tracks/feat-001/plan.md` - 实施计划
 - `.conductor/tracks/feat-001/metadata.json` - 元数据
 
-### 4. 执行任务
+### 4. 审核计划 (Plan Review) ⚠️
+
+```
+/conductor:review-plan
+```
+
+**实施前必做步骤**：
+
+- 审核 SPEC.md 确保需求清晰完整
+- 审核 PLAN.md 确保任务粒度合适
+- 评估技术可行性和潜在风险
+- 确认无误后才能开始实施
+
+审核通过后，track 状态变为 `plan_approved`，即可进入实施阶段。
+
+### 5. 执行任务
 
 ```
 /conductor:implement
@@ -108,19 +125,27 @@ Conductor 会：
 4. 每次任务完成后请求你验证
 5. 更新进度状态
 
-### 5. 查看进度
+### 6. 查看进度
 
 ```
 /conductor:status
 ```
 
-### 6. 代码审查
+### 7. 代码审查
 
 ```
 /conductor:review
 ```
 
 基于 product-guidelines.md 检查代码变更。
+
+### 8. 智能回滚
+
+```
+/conductor:revert feat-001
+```
+
+回滚指定 track 或任务的所有变更。
 
 ## 目录结构
 
@@ -131,6 +156,7 @@ project/
 │   ├── product-guidelines.md   # 产品指南
 │   ├── tech-stack.md          # 技术栈
 │   ├── workflow.md            # 工作流定义
+│   ├── code-styles.md         # 代码规范
 │   ├── tracks.md              # Track 索引
 │   └── tracks/
 │       └── {track_id}/
@@ -139,6 +165,24 @@ project/
 │           └── metadata.json  # 元数据
 └── src/                       # 项目代码
 ```
+
+## 完整工作流
+
+```
+/conductor:setup                    # 1. 初始化项目
+    ↓
+/conductor:newTrack "新功能"         # 2. 创建 track
+    ↓
+/conductor:review-plan              # 3. 审核计划 ⚠️
+    ↓
+/conductor:implement                # 4. 实施
+    ↓
+/conductor:review                    # 5. 代码审查
+    ↓
+git commit                          # 6. 提交
+```
+
+> **核心理念**：Measure twice, cut once. Plan Review 是实施前的守门人，确保计划完善后再动手coding。
 
 ## 与 Git Master 集成
 
