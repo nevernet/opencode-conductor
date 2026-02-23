@@ -38,8 +38,8 @@ git clone https://github.com/nevernet/opencode-conductor.git /tmp/opencode-condu
 # 2. 创建全局 skill 目录
 mkdir -p ~/.config/opencode/skills/conductor
 
-# 3. 复制 skill 文件并重命名为 SKILL.md（必须）
-cp /tmp/opencode-conductor/conductor-skill.md ~/.config/opencode/skills/conductor/SKILL.md
+# 3. 复制 skill 文件（直接复制，保留 SKILL.md 名称）
+cp /tmp/opencode-conductor/SKILL.md ~/.config/opencode/skills/conductor/
 
 # 4. 复制模板文件（可选）
 cp -r /tmp/opencode-conductor/templates ~/.config/opencode/skills/conductor/
@@ -56,8 +56,8 @@ mkdir -p .opencode/skills/conductor
 # 2. 克隆仓库到临时目录
 git clone https://github.com/nevernet/opencode-conductor.git /tmp/opencode-conductor
 
-# 3. 复制 skill 文件并重命名为 SKILL.md（必须）
-cp /tmp/opencode-conductor/conductor-skill.md .opencode/skills/conductor/SKILL.md
+# 3. 复制 skill 文件（直接复制，保留 SKILL.md 名称）
+cp /tmp/opencode-conductor/SKILL.md .opencode/skills/conductor/
 
 # 4. 复制模板文件（可选）
 cp -r /tmp/opencode-conductor/templates .opencode/skills/conductor/
