@@ -1,3 +1,11 @@
+---
+name: conductor
+description: Context-Driven Development - 类似 Google Gemini Conductor 的结构化开发工作流。支持 setup/newTrack/implement/status/revert/review 命令。
+license: Apache-2.0
+compatibility: opencode
+---
+
+
 # Conductor Skill - Context-Driven Development
 
 **Measure twice, code once.**
