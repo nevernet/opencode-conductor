@@ -27,7 +27,49 @@ Context → Spec & Plan → Implement
 
 ### 1. 安装 Skill
 
-将 `conductor-skill.md` 的内容作为 system prompt 加载，或直接在对话中使用。
+#### 方式一：全局安装（推荐）
+
+全局安装后，Conductor Skill 在所有 OpenCode 项目中可用。
+
+```bash
+# 1. 克隆仓库
+git clone https://github.com/nevernet/opencode-conductor.git /tmp/opencode-conductor
+
+# 2. 创建全局 skill 目录
+mkdir -p ~/.config/opencode/skills/conductor
+
+# 3. 复制 skill 文件并重命名为 SKILL.md（必须）
+cp /tmp/opencode-conductor/conductor-skill.md ~/.config/opencode/skills/conductor/SKILL.md
+
+# 4. 复制模板文件（可选）
+cp -r /tmp/opencode-conductor/templates ~/.config/opencode/skills/conductor/
+```
+
+#### 方式二：项目级别安装
+
+项目级别安装只在当前项目中使用 Conductor Skill。
+
+```bash
+# 1. 在项目根目录创建 .opencode/skills/conductor/
+mkdir -p .opencode/skills/conductor
+
+# 2. 克隆仓库到临时目录
+git clone https://github.com/nevernet/opencode-conductor.git /tmp/opencode-conductor
+
+# 3. 复制 skill 文件并重命名为 SKILL.md（必须）
+cp /tmp/opencode-conductor/conductor-skill.md .opencode/skills/conductor/SKILL.md
+
+# 4. 复制模板文件（可选）
+cp -r /tmp/opencode-conductor/templates .opencode/skills/conductor/
+```
+
+#### 方式三：直接使用
+
+如果你不想安装，也可以直接在对话中加载 skill 内容。
+
+在 OpenCode 对话中输入 `/conductor:setup` 即可开始使用。
+
+> **注意**：首次使用时会引导你设置项目上下文，请按照提示完成初始化。
 
 ### 2. 初始化项目
 
