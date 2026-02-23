@@ -24,6 +24,7 @@ Analyze the user's request to determine operation mode:
 |---------------------|------|---------|
 | `/conductor:setup` | SETUP | Phase 1 |
 | `/conductor:newTrack` or "start a new feature" | NEW_TRACK | Phase 2 |
+| `/conductor:review-plan` or "review plan" | PLAN_REVIEW | Phase 2.5 |
 | `/conductor:implement` or "start implementing" | IMPLEMENT | Phase 3 |
 | `/conductor:status` | STATUS | Phase 4 |
 | `/conductor:revert` | REVERT | Phase 5 |
@@ -233,6 +234,90 @@ Next steps:
   - /conductor:status to view progress
 ```
 </new_track_workflow>
+---
+
+## PHASE 2.5: PLAN REVIEW (Mode: PLAN_REVIEW)
+
+<plan_review_workflow>
+### 2.5.1 Purpose
+Review the SPEC.md and PLAN.md **before** implementation to catch issues early. This is a critical "measure twice, cut once" step.
+
+### 2.5.2 Load Context
+- Read `.conductor/tracks/{track_id}/spec.md`
+- Read `.conductor/tracks/{track_id}/plan.md`
+- Read `.conductor/product.md`
+- Read `.conductor/tech-stack.md`
+- Read `.conductor/code-styles.md`
+
+### 2.5.3 Review Checklist
+```
+SPEC REVIEW:
+- [ ] Requirements are clear and complete: {yes/no/notes}
+- [ ] Acceptance criteria are testable: {yes/no/notes}
+- [ ] Edge cases are identified: {yes/no/notes}
+- [ ] Feasible with current tech stack: {yes/no/notes}
+
+PLAN REVIEW:
+- [ ] Tasks are atomic and small enough: {yes/no/notes}
+- [ ] Dependencies between tasks are clear: {yes/no/notes}
+- [ ] Verification phase included: {yes/no/notes}
+- [ ] No missing implementation steps: {yes/no/notes}
+
+RISK ASSESSMENT:
+- [ ] Potential blockers identified: {yes/no/notes}
+- [ ] Complex tasks have extra padding: {yes/no/notes}
+```
+
+### 2.5.4 Output Report
+```
+PLAN REVIEW REPORT
+==================
+Track: feat-001 - Dark Mode
+
+SPEC ASSESSMENT
+---------------
+✓ Requirements clear and complete
+⚠ Need clarification: Edge cases for system theme preference
+
+PLAN ASSESSMENT
+---------------
+✓ Tasks are atomic
+⚠ Task 2.3 lacks testing step
+
+RISKS
+-----
+⚠ Third-party theme library compatibility not verified
+
+RECOMMENDATIONS
+--------------
+1. Add acceptance criteria for system theme detection
+2. Split Task 2.3 into implementation + test
+3. Research theme library compatibility before starting
+
+OVERALL: APPROVED with minor fixes needed
+
+Actions required before implementation:
+- [ ] Clarify system theme edge case
+- [ ] Add test task for 2.3
+```
+
+### 2.5.5 User Decision
+After presenting the review report, ask the user:
+```
+Options:
+1. Proceed with implementation (if approved)
+2. Revise SPEC.md (go back to edit)
+3. Revise PLAN.md (go back to edit)
+4. Cancel track
+
+Your decision: [1/2/3/4]
+```
+
+### 2.5.6 State Update
+- If approved: Update metadata.json status to "plan_approved"
+- If needs revision: Mark track status to "plan_revision"
+
+</plan_review_workflow>
 
 ---
 
@@ -477,7 +562,8 @@ Recommended actions:
 |---------|-------------|----------------|
 | `/conductor:setup` | Initialize project context | None |
 | `/conductor:newTrack [desc]` | Create new feature/bug track | Setup complete |
-| `/conductor:implement` | Execute current track | Active track exists |
+| `/conductor:review-plan` | Review SPEC/PLAN before implementing | Track created |
+| `/conductor:implement` | Execute current track | Plan approved |
 | `/conductor:status` | Show progress | tracks.md exists |
 | `/conductor:revert [scope]` | Revert changes | Git history |
 | `/conductor:review` | Review completed work | Track complete |
