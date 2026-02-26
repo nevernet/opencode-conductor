@@ -71,6 +71,56 @@ ln -s .codebuddy/skills/conductor/.codebuddy/commands/*.md .codebuddy/commands/
 /conductor:implement          # 开始实现
 ```
 
+## 安装到 Cursor
+
+### 方式一：使用安装脚本（推荐）
+
+在项目根目录执行：
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/nevernet/opencode-conductor/main/install-cursor.sh | bash
+```
+
+或先下载脚本再执行：
+
+```bash
+curl -fsSL -o install-cursor.sh https://raw.githubusercontent.com/nevernet/opencode-conductor/main/install-cursor.sh
+bash install-cursor.sh
+```
+
+脚本会创建 `.cursor/commands/` 目录并复制所有 Conductor 命令文件。
+
+### 方式二：手动安装
+
+1. 克隆仓库到本地
+
+```bash
+git clone https://github.com/nevernet/opencode-conductor.git /tmp/opencode-conductor
+```
+
+2. 复制命令文件到项目
+
+```bash
+mkdir -p .cursor/commands
+cp /tmp/opencode-conductor/.cursor/commands/*.md .cursor/commands/
+```
+
+### 安装后使用
+
+安装完成后，在 Cursor 的 AI 聊天框中输入 `/`，在命令列表中选择对应的 `conductor-*` 命令即可：
+
+| 命令 | 说明 |
+|------|------|
+| `conductor-setup` | 初始化项目 |
+| `conductor-newtrack` | 创建新功能（可在下一句补充描述） |
+| `conductor-review-plan` | 审核计划 |
+| `conductor-implement` | 开始实现 |
+| `conductor-status` | 查看进度 |
+| `conductor-revert` | 回滚 |
+| `conductor-review` | 代码审查 |
+
+> Cursor 的斜杠命令由文件名决定，因此是 `/conductor-setup` 等形式（无冒号）。详见项目内 `.cursor/CURSOR_COMMANDS.md`。
+
 ## 使用方法
 
 ### 1. 安装 Skill
