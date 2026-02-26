@@ -23,6 +23,7 @@ Context → Spec & Plan → Implement
 | `/conductor:status` | 查看进度 |
 | `/conductor:revert [scope]` | 智能回滚 |
 | `/conductor:review` | 代码审查 |
+| `/conductor:archive [track_id]` | 归档已完成的 track |
 
 ## 安装到 CodeBuddy
 
@@ -118,6 +119,7 @@ cp /tmp/opencode-conductor/.cursor/commands/*.md .cursor/commands/
 | `conductor-status` | 查看进度 |
 | `conductor-revert` | 回滚 |
 | `conductor-review` | 代码审查 |
+| `conductor-archive` | 归档已完成的 track |
 
 > Cursor 的斜杠命令由文件名决定，因此是 `/conductor-setup` 等形式（无冒号）。详见项目内 `.cursor/CURSOR_COMMANDS.md`。
 
@@ -243,6 +245,15 @@ Conductor 会：
 ```
 
 回滚指定 track 或任务的所有变更。
+
+### 9. 归档 Track
+
+```
+/conductor:archive feat-001       # 归档指定 track
+/conductor:archive all            # 归档所有已完成的 tracks
+```
+
+归档功能用于将已完成的 tracks 从 "Completed Tracks" 移动到 "Archived Tracks"，保持项目索引整洁。
 
 ## 目录结构
 

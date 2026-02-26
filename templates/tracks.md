@@ -12,6 +12,12 @@
 |----|------|-----------|
 |    |      |           |
 
+## Archived Tracks
+
+| ID | Name | Archived Date |
+|----|------|---------------|
+|    |      |               |
+
 ---
 
 ## Track Index

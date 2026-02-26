@@ -29,6 +29,7 @@ Analyze the user's request to determine operation mode:
 | `/conductor:status` | STATUS | Phase 4 |
 | `/conductor:revert` | REVERT | Phase 5 |
 | `/conductor:review` | REVIEW | Phase 6 |
+| `/conductor:archive` or "archive track" | ARCHIVE | Phase 7 |
 | General question about project | CONTEXT_QUERY | Phase 0 |
 
 ---
@@ -567,6 +568,7 @@ Recommended actions:
 | `/conductor:status` | Show progress | tracks.md exists |
 | `/conductor:revert [scope]` | Revert changes | Git history |
 | `/conductor:review` | Review completed work | Track complete |
+| `/conductor:archive [track_id]` | Archive completed track(s) | Completed tracks |
 
 ---
 
@@ -578,6 +580,70 @@ Recommended actions:
 4. **NEVER ignore guidelines** - Always check product-guidelines.md
 5. **NEVER skip test** - Follow workflow.md testing requirements
 6. **NEVER commit without review** - Always run /conductor:review before commit
+
+---
+
+---
+
+## PHASE 7: ARCHIVE (Mode: ARCHIVE)
+
+<archive_workflow>
+### 7.1 Purpose
+Archive completed tracks to keep the project organized. Archived tracks are moved from "Completed Tracks" to "Archived Tracks" section in tracks.md.
+
+### 7.2 Parse Archive Request
+- User can specify: track ID, or "all" to archive all completed tracks
+- If no track specified, list completed tracks and ask user to select
+
+### 7.3 Validate Track Status
+- Check if track exists
+- Verify track status is "completed"
+- If track is not completed, warn user and ask for confirmation
+
+### 7.4 Archive Operations
+
+**Single Track Archive:**
+1. Move track from "Completed Tracks" to "Archived Tracks" in tracks.md
+2. Update metadata.json status to "archived"
+3. Add "archived_date" field to metadata.json
+
+**Batch Archive (all completed):**
+1. Move all tracks with status "completed" to "Archived Tracks"
+2. Update all corresponding metadata.json files
+
+### 7.5 Output
+
+```
+ARCHIVE COMPLETED
+=================
+Track(s) archived: feat-001, feat-002
+
+Files updated:
+  - .conductor/tracks.md
+  - .conductor/tracks/feat-001/metadata.json
+  - .conductor/tracks/feat-002/metadata.json
+
+Active Tracks: 2
+Completed Tracks: 0
+Archived Tracks: 5
+```
+
+### 7.6 Archive Structure
+
+After archiving, tracks.md structure:
+```markdown
+## Active Tracks
+| ID | Name | Status | Progress |
+
+## Completed Tracks
+| ID | Name | Completed |
+
+## Archived Tracks
+| ID | Name | Archived Date |
+|----|------|---------------|
+| feat-001 | Dark Mode | 2026-02-26 |
+```
+</archive_workflow>
 
 ---
 
