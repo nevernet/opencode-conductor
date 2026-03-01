@@ -123,6 +123,77 @@ cp /tmp/opencode-conductor/.cursor/commands/*.md .cursor/commands/
 
 > Cursor 的斜杠命令由文件名决定，因此是 `/conductor-setup` 等形式（无冒号）。详见项目内 `.cursor/CURSOR_COMMANDS.md`。
 
+## 安装到 Trae
+
+### 方式一：使用安装脚本（推荐）
+
+在项目根目录执行：
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/nevernet/opencode-conductor/main/install-trae.sh | bash
+```
+
+或先下载脚本再执行：
+
+```bash
+curl -fsSL -o install-trae.sh https://raw.githubusercontent.com/nevernet/opencode-conductor/main/install-trae.sh
+bash install-trae.sh
+```
+
+脚本会安装：
+- `.trae/commands/` - 命令文件
+- `.trae/skills/conductor/` - Skill 文件
+- `templates/` - 模板文件（可选）
+
+### 方式二：手动安装
+
+1. 克隆仓库到本地
+
+```bash
+git clone https://github.com/nevernet/opencode-conductor.git /tmp/opencode-conductor
+```
+
+2. 复制文件到项目
+
+```bash
+# 创建目录
+mkdir -p .trae/commands
+mkdir -p .trae/skills/conductor
+
+# 复制命令文件
+cp /tmp/opencode-conductor/.trae/commands/*.md .trae/commands/
+
+# 复制 skill 文件
+cp /tmp/opencode-conductor/.trae/skills/conductor/SKILL.md .trae/skills/conductor/
+
+# 复制模板文件（可选）
+mkdir -p templates
+cp -r /tmp/opencode-conductor/templates/* templates/
+```
+
+### 安装后使用
+
+安装完成后，在 Trae 中有两种使用方式：
+
+**方式一：使用斜杠命令**
+
+在 AI 聊天框中输入 `/`，在命令列表中选择对应的 `conductor-*` 命令：
+
+| 命令 | 说明 |
+|------|------|
+| `conductor-setup` | 初始化项目 |
+| `conductor-newtrack` | 创建新功能 |
+| `conductor-review-plan` | 审核计划 |
+| `conductor-implement` | 开始实现 |
+| `conductor-status` | 查看进度 |
+| `conductor-revert` | 回滚 |
+| `conductor-review` | 代码审查 |
+| `conductor-archive` | 归档已完成的 track |
+
+**方式二：直接使用 Skill**
+
+Trae 会自动加载 `.trae/skills/` 目录下的 Skill，直接在对话中描述需求即可触发 Conductor 工作流。
+
 ## 使用方法
 
 ### 1. 安装 Skill
