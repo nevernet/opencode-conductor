@@ -143,7 +143,6 @@ bash install-trae.sh
 脚本会安装：
 - `.trae/commands/` - 命令文件
 - `.trae/skills/conductor/` - Skill 文件
-- `templates/` - 模板文件（可选）
 
 ### 方式二：手动安装
 
@@ -165,10 +164,6 @@ cp /tmp/opencode-conductor/.trae/commands/*.md .trae/commands/
 
 # 复制 skill 文件
 cp /tmp/opencode-conductor/.trae/skills/conductor/SKILL.md .trae/skills/conductor/
-
-# 复制模板文件（可选）
-mkdir -p templates
-cp -r /tmp/opencode-conductor/templates/* templates/
 ```
 
 ### 安装后使用

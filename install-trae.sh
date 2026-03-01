@@ -33,13 +33,6 @@ cp "$TEMP_DIR/.trae/commands/"*.md "$COMMANDS_DIR/"
 echo "🎯 Installing skills..."
 cp "$TEMP_DIR/.trae/skills/conductor/SKILL.md" "$SKILLS_DIR/conductor/"
 
-# Copy templates directory (optional)
-if [ -d "$TEMP_DIR/templates" ]; then
-    echo "📁 Installing templates..."
-    mkdir -p templates
-    cp -r "$TEMP_DIR/templates/"* templates/
-fi
-
 # Copy SKILL.md to project root (optional, for reference)
 if [ ! -f "SKILL.md" ]; then
     echo "📄 Copying SKILL.md to project root..."
@@ -48,8 +41,6 @@ fi
 
 # Count installed items
 CMD_COUNT=$(ls -1 "$COMMANDS_DIR/"*.md 2>/dev/null | wc -l | tr -d ' ')
-SKILL_COUNT=$(ls -1d "$SKILLS_DIR"/*/ 2>/dev/null | wc -l | tr -d ' ')
-TEMPLATE_COUNT=$(ls -1 templates/*.md 2>/dev/null | wc -l | tr -d ' ')
 
 # Cleanup
 rm -rf "$TEMP_DIR"
@@ -61,13 +52,8 @@ echo "Installed:"
 echo "  - $CMD_COUNT commands to $COMMANDS_DIR/"
 ls -1 "$COMMANDS_DIR/"*.md 2>/dev/null | sed 's/.*\//    /'
 echo ""
-echo "  - $SKILL_COUNT skill to $SKILLS_DIR/conductor/"
+echo "  - 1 skill to $SKILLS_DIR/conductor/"
 echo "    SKILL.md"
-echo ""
-if [ -n "$TEMPLATE_COUNT" ] && [ "$TEMPLATE_COUNT" -gt 0 ]; then
-    echo "  - $TEMPLATE_COUNT templates to templates/"
-    ls -1 templates/*.md 2>/dev/null | sed 's/.*\//    /'
-fi
 echo ""
 echo "Next steps:"
 echo "  1. Open Trae"
