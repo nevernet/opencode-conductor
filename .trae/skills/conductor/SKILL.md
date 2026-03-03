@@ -33,6 +33,30 @@ Analyze the user's request to determine operation mode:
 
 ---
 
+## 双层上下文结构
+
+### 项目级上下文（一次搭建，长期复用）
+
+| 文件/目录 | 职责 | 说明 |
+|-----------|------|------|
+| `codebase/**/MAINFEST.md` | 代码结构索引 | 让 AI 瞬间理解项目结构 |
+| `.conductor/product.md` | 产品概述 | 项目定位、核心功能、目标用户 |
+| `.conductor/tech-stack.md` | 技术栈 | 前后端技术、数据库、端口约定 |
+| `.conductor/workflow.md` | 工作流程 | 开发环境启动、测试流程、Track 管理 |
+| `.conductor/code-styles.md` | 代码风格 | 编码规范 |
+| `.conductor/product-guidelines.md` | 产品规范 | 产品相关约束 |
+| `references/*.md` | 开发规范 | card-guide.md、test-*.md 等 |
+
+### 任务级上下文（每次新建 Track）
+
+| 文件 | 职责 | 对应开发文档章节 |
+|------|------|------------------|
+| `.conductor/tracks/<id>/spec.md` | 需求规格 | 一、需求背景 + 二、数据库变更 + 三、API 定义 |
+| `.conductor/tracks/<id>/plan.md` | 执行计划 | 总任务一览 + Step 1～6 分阶段任务 |
+| `.conductor/tracks/<id>/metadata.json` | 状态跟踪 | Track 执行状态 |
+
+---
+
 ## PHASE 0: Context Detection (ALWAYS RUN FIRST)
 
 <context_detection>
@@ -43,9 +67,13 @@ Analyze the user's request to determine operation mode:
    - `.conductor/product.md`
    - `.conductor/tech-stack.md`
    - `.conductor/workflow.md`
+   - `.conductor/code-styles.md`
    - `.conductor/tracks.md`
-3. Identify current active track (if any)
-4. Report the loaded context summary
+3. Additionally, attempt to load project structure context:
+   - `MAINFEST.md` or `codebase/**/MAINFEST.md` (if exists)
+   - `references/*.md` (if exists)
+4. Identify current active track (if any)
+5. Report the loaded context summary
 
 **Output format:**
 
@@ -128,6 +156,27 @@ Create `.conductor/` directory with:
 └── tracks.md
 ```
 
+**Note:** After setup, recommend user to add references to existing development documentation in:
+- `.conductor/tech-stack.md` - Reference backend/frontend development guides
+- `.conductor/workflow.md` - Reference Git workflow, testing standards
+- `.conductor/code-styles.md` - Reference linting/formatting guides
+
+Example references to add:
+```markdown
+## 技术栈与规范
+
+### 后端开发规范
+- **Card 项目开发指南**: docs/references/card-guide.md
+- **Go 后端测试**: docs/references/test-golang-guide.md
+
+### 前端开发规范
+- **浏览器测试**: docs/references/test-browser-guide.md
+
+### 开发流程
+- **通用开发规范**: docs/references/develop-guide.md
+- **Git Worktree 流程**: docs/references/develop-git-guide.md
+```
+
 ### 1.4 Output
 
 ```
@@ -172,23 +221,32 @@ Create `.conductor/tracks/{track_id}/spec.md`:
 # Spec: {Feature Name}
 
 ## Overview
-
 {Brief description of what this feature does}
 
 ## Why
-
 {Reason for building this feature}
 
 ## Requirements
-
 - Requirement 1
 - Requirement 2
 
 ## Acceptance Criteria
-
 - [ ] Criteria 1
 - [ ] Criteria 2
+
+## API Changes (if applicable)
+| API | Method | Description |
+|-----|--------|-------------|
+| /api/xxx | GET | Description |
+
+## Database Changes (if applicable)
+- Table: xxx
+  - Add column: xxx
 ```
+
+**Note:** spec.md can reference existing development documentation:
+- "本 Track 规格见：`docs/requirements/card/<模块>/<模块名>.md`"
+- Extract key points from "一、需求背景" and "三、3.3 接口变更"
 
 ### 2.4 Generate PLAN.md
 
@@ -197,20 +255,33 @@ Create `.conductor/tracks/{track_id}/plan.md`:
 ```markdown
 # Plan: {Feature Name}
 
-## Phase 1: Foundation
-
+## Phase 1: 数据库/枚举变更
 - [ ] Task 1.1: Description
 - [ ] Task 1.2: Description
 
-## Phase 2: Implementation
-
+## Phase 2: API 定义 → 代码生成
 - [ ] Task 2.1: Description
 - [ ] Task 2.2: Description
 
-## Phase 3: Verification
-
+## Phase 3: 后端开发（DB → Lib → apiservice）
 - [ ] Task 3.1: Description
+- [ ] Task 3.2: Description
+
+## Phase 4: Admin 前端
+- [ ] Task 4.1: Description
+
+## Phase 5: 小程序前端（如有）
+- [ ] Task 5.1: Description
+
+## Phase 6: 测试验证
+- [ ] Task 6.1: Description
+- [ ] Task 6.2: Integration test
 ```
+
+**Note:** 
+- Align phases with "开发步骤总览（Step 1～6）" from development documentation
+- Put tasks from "本需求总任务一览" into appropriate phases
+- Implementation order: DB → Lib → apiservice → Frontend
 
 ### 2.5 Generate metadata.json
 
@@ -223,8 +294,8 @@ Create `.conductor/tracks/{track_id}/metadata.json`:
   "type": "feat",
   "status": "pending",
   "created": "2026-02-22",
-  "phases": 3,
-  "total_tasks": 6,
+  "phases": 6,
+  "total_tasks": 8,
   "completed_tasks": 0
 }
 ```
@@ -247,7 +318,7 @@ Add new track to `.conductor/tracks.md`:
 NEW TRACK CREATED
 =================
 Track ID: feat-001
-Name: Dark Mode
+Name: {Feature Name}
 Type: feat
 
 Files created:
@@ -255,10 +326,21 @@ Files created:
   - .conductor/tracks/feat-001/plan.md
   - .conductor/tracks/feat-001/metadata.json
 
+Plan structure (based on Step 1-6):
+  - Phase 1: 数据库/枚举变更
+  - Phase 2: API 定义 → 代码生成
+  - Phase 3: 后端开发
+  - Phase 4: Admin 前端
+  - Phase 5: 小程序前端
+  - Phase 6: 测试验证
+
 Next steps:
+  - Review SPEC.md and PLAN.md
+  - /conductor:review-plan to validate before implementation
   - /conductor:implement to start working
-  - /conductor:status to view progress
 ```
+
+**铁律：必须先给出完整计划，不要直接执行任何代码！**
 
 ## </new_track_workflow>
 
@@ -359,6 +441,26 @@ Your decision: [1/2/3/4]
 
 <implement_workflow>
 
+### 3.0 Phase Execution Order (MUST FOLLOW)
+
+执行必须严格按照以下 Phase 顺序，**禁止跳 Phase**：
+
+```
+Phase 1: 数据库/枚举变更
+    ↓
+Phase 2: API 定义 → 代码生成
+    ↓
+Phase 3: 后端开发（DB → Lib → apiservice）
+    ↓
+Phase 4: Admin 前端
+    ↓
+Phase 5: 小程序前端（如有）
+    ↓
+Phase 6: 测试验证
+```
+
+**重要：每个 Phase 完成后，必须等待用户确认再进入下一个 Phase！**
+
 ### 3.1 Load Current Track
 
 - Read `.conductor/tracks.md` to find active track
@@ -376,7 +478,7 @@ Your decision: [1/2/3/4]
 **For each task:**
 
 1. Read the task description
-2. Read relevant context files
+2. Read relevant context files (including MAINFEST.md, references/*.md if available)
 3. Execute the work (edit files, write code, etc.)
 4. After completing, ask user to verify:
 
@@ -390,6 +492,10 @@ Your decision: [1/2/3/4]
 
    Reply "done" to mark complete, or describe issues to fix.
    ```
+
+**Phase Boundary Checkpoint:**
+- When completing all tasks in a Phase, explicitly ask user to confirm before proceeding to next Phase
+- Example: "Phase 1 completed! Please verify database changes. Reply 'continue' to proceed to Phase 2."
 
 ### 3.4 Update Progress
 
@@ -412,8 +518,8 @@ Your decision: [1/2/3/4]
 ```
 IMPLEMENTING: feat-001
 ===================
-Phase: 2 (Implementation)
-Task: 2.1 - Integrate toggle in settings page
+Phase: 3 (后端开发 - DB → Lib → apiservice)
+Task: 3.1 - Description
 
 Context loaded:
   - product.md: SCRM system
@@ -425,6 +531,8 @@ Context loaded:
 TASK COMPLETE
 =============
 Please verify the implementation, then reply "done" to continue.
+
+Phase Boundary: After completing Phase 3 tasks, you must get user confirmation before moving to Phase 4.
 ```
 
 **On track completion:**
@@ -433,7 +541,7 @@ Please verify the implementation, then reply "done" to continue.
 TRACK COMPLETED: feat-001
 ========================
 Feature: Dark Mode
-Tasks completed: 6/6
+Tasks completed: 8/8 (Phases 1-6 all complete)
 
 Files modified:
   - src/app/theme.service.ts
@@ -466,16 +574,24 @@ CONDUCTOR STATUS
 Active Tracks:
 | ID | Name | Phase | Progress |
 |----|------|-------|----------|
-| feat-001 | Dark Mode | 2/3 | 4/6 |
-| fix-002 | Login bug | 1/2 | 1/3 |
+| feat-001 | Dark Mode | 3/6 | 4/8 |
+| fix-002 | Login bug | 1/6 | 1/3 |
 
 Completed Tracks:
 | ID | Name | Completed Date |
-|----|------|-----------------|
-| feat-001 | User profile | 2026-02-20 |
+|-----|------|-----------------|
+| feat-002 | User profile | 2026-02-20 |
 | fix-001 | Typo fix | 2026-02-18 |
 
 Total: 4 tracks (2 active, 2 completed)
+
+Phase Guide:
+  Phase 1: 数据库/枚举变更
+  Phase 2: API 定义 → 代码生成
+  Phase 3: 后端开发（DB → Lib → apiservice）
+  Phase 4: Admin 前端
+  Phase 5: 小程序前端（如有）
+  Phase 6: 测试验证
 ```
 
 ### 4.3 If No Tracks
@@ -702,14 +818,41 @@ After archiving, tracks.md structure:
 
 ---
 
+## 铁律：先 Plan 再执行
+
+**所有任务必须遵循以下顺序，禁止直接开始编码！**
+
+```
+Step 1: 注入上下文
+         ↓
+Step 2: 明确终态（10字以内最佳）
+         ↓
+Step 3: 强制先 Plan（铁律！）
+         ↓
+Step 4: 审阅 & 迭代 Plan
+         ↓
+Step 5: 分阶段执行 & 验证
+         ↓
+Step 6: 结束总结
+```
+
+**核心铁律：**
+- **必须先给出完整计划，不要直接执行任何代码！**
+- Plan 必须包含：步骤、需要哪些文件、潜在风险、检查点
+- 确认 Plan 合理后再开始执行
+
+---
+
 ## Anti-Patterns (NEVER DO THESE)
 
 1. **NEVER skip setup** - Always establish context before implementing
-2. **NEVER implement without a plan** - Always generate spec + plan first
+2. **NEVER implement without a plan** - Always generate spec + plan first (铁律！)
 3. **NEVER skip verification** - Always ask user to verify completed tasks
 4. **NEVER ignore guidelines** - Always check product-guidelines.md
 5. **NEVER skip test** - Follow workflow.md testing requirements
 6. **NEVER commit without review** - Always run /conductor:review before commit
+7. **NEVER skip phase order** - Follow Phase 1→2→3→4→5→6 strictly
+8. **NEVER skip phase checkpoint** - Always get user confirmation between Phases
 
 ---
 

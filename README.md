@@ -189,11 +189,36 @@ cp /tmp/opencode-conductor/.trae/skills/conductor/SKILL.md .trae/skills/conducto
 
 Trae 会自动加载 `.trae/skills/` 目录下的 Skill，直接在对话中描述需求即可触发 Conductor 工作流。
 
-## 使用方法
+## 安装到 OpenCode
 
-### 1. 安装 Skill
+### 方式一：使用安装脚本（推荐）
 
-#### 方式一：全局安装（推荐）
+在项目根目录执行：
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/nevernet/opencode-conductor/main/install-opencode.sh | bash
+```
+
+或先下载脚本再执行：
+
+```bash
+curl -fsSL -o install-opencode.sh https://raw.githubusercontent.com/nevernet/opencode-conductor/main/install-opencode.sh
+bash install-opencode.sh
+```
+
+脚本支持两种安装模式：
+- **项目级别安装**（默认）：安装到 `.opencode/skills/conductor/`
+- **全局安装**：使用 `--global` 参数，安装到 `~/.config/opencode/skills/conductor/`
+
+```bash
+# 项目级别安装（默认）
+bash install-opencode.sh
+
+# 全局安装
+bash install-opencode.sh --global
+```
+
+### 方式二：手动安装（全局）
 
 全局安装后，Conductor Skill 在所有 OpenCode 项目中可用。
 
@@ -211,7 +236,7 @@ cp /tmp/opencode-conductor/SKILL.md ~/.config/opencode/skills/conductor/
 cp -r /tmp/opencode-conductor/templates ~/.config/opencode/skills/conductor/
 ```
 
-#### 方式二：项目级别安装
+### 方式三：手动安装（项目级别）
 
 项目级别安装只在当前项目中使用 Conductor Skill。
 
@@ -229,7 +254,7 @@ cp /tmp/opencode-conductor/SKILL.md .opencode/skills/conductor/
 cp -r /tmp/opencode-conductor/templates .opencode/skills/conductor/
 ```
 
-#### 方式三：直接使用
+### 方式四：直接使用
 
 如果你不想安装，也可以直接在对话中加载 skill 内容。
 
@@ -237,7 +262,24 @@ cp -r /tmp/opencode-conductor/templates .opencode/skills/conductor/
 
 > **注意**：首次使用时会引导你设置项目上下文，请按照提示完成初始化。
 
-### 2. 初始化项目
+### 安装后使用
+
+安装完成后，在 OpenCode 中直接使用以下命令：
+
+| 命令 | 说明 |
+|------|------|
+| `/conductor:setup` | 初始化项目 |
+| `/conductor:newTrack` | 创建新功能 |
+| `/conductor:review-plan` | 审核计划 |
+| `/conductor:implement` | 开始实现 |
+| `/conductor:status` | 查看进度 |
+| `/conductor:revert` | 回滚 |
+| `/conductor:review` | 代码审查 |
+| `/conductor:archive` | 归档已完成的 track |
+
+## 使用方法
+
+### 1. 初始化项目
 
 ```
 /conductor:setup
@@ -251,7 +293,7 @@ cp -r /tmp/opencode-conductor/templates .opencode/skills/conductor/
 - `.conductor/code-styles.md` - 代码规范
 - `.conductor/tracks.md` - Track 索引
 
-### 3. 创建新功能 Track
+### 2. 创建新功能 Track
 
 ```
 /conductor:newTrack "Add dark mode toggle"
@@ -262,7 +304,7 @@ cp -r /tmp/opencode-conductor/templates .opencode/skills/conductor/
 - `.conductor/tracks/feat-001/plan.md` - 实施计划
 - `.conductor/tracks/feat-001/metadata.json` - 元数据
 
-### 4. 审核计划 (Plan Review) ⚠️
+### 3. 审核计划 (Plan Review) ⚠️
 
 ```
 /conductor:review-plan
@@ -277,7 +319,7 @@ cp -r /tmp/opencode-conductor/templates .opencode/skills/conductor/
 
 审核通过后，track 状态变为 `plan_approved`，即可进入实施阶段。
 
-### 5. 执行任务
+### 4. 执行任务
 
 ```
 /conductor:implement
@@ -290,13 +332,13 @@ Conductor 会：
 4. 每次任务完成后请求你验证
 5. 更新进度状态
 
-### 6. 查看进度
+### 5. 查看进度
 
 ```
 /conductor:status
 ```
 
-### 7. 代码审查
+### 6. 代码审查
 
 ```
 /conductor:review
@@ -304,7 +346,7 @@ Conductor 会：
 
 基于 product-guidelines.md 检查代码变更。
 
-### 8. 智能回滚
+### 7. 智能回滚
 
 ```
 /conductor:revert feat-001
@@ -312,7 +354,7 @@ Conductor 会：
 
 回滚指定 track 或任务的所有变更。
 
-### 9. 归档 Track
+### 8. 归档 Track
 
 ```
 /conductor:archive feat-001       # 归档指定 track
